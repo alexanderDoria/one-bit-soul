@@ -3,23 +3,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <link rel="icon" href="{% static 'img/soul.png' %}" />
-
-    <title>Soul</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'styles/bootstrap.min.css' %}" rel="stylesheet" />
-    <!-- Custom styles for this template -->
+    {% include "head.html" %}
     <link href="{% static 'styles/floating-labels.css' %}" rel="stylesheet" />
-    <link href="{% static 'styles/custom.css' %}" rel="stylesheet" />
   </head>
 
   <body>
@@ -34,9 +19,16 @@
           </p>
         </div>
 
-        <div class="form-label-group">
-          <input id="subreddit" name="subreddit" class="form-control" />
-          <label>subreddit</label>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">/r/</span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="subreddit"
+            name="subreddit"
+          />
         </div>
 
         <button class="btn btn-lg btn-dark btn-block" type="submit">
