@@ -3,47 +3,57 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import pandas as pd
 import re
 
-# TODO: incorporate multiple subreddits
-#subreddit_list = ['askreddit', 'nba']
+subreddit_list = ['askreddit']
 
 analyzer = SentimentIntensityAnalyzer()
-store = {}
-submission_urls = []
-post_ids = []
-titles = []
-post_times = []
-comments = []
-upvote_counts = []
-
-
-def process_comment(c):
-    c = re.split("edit", c, flags=re.IGNORECASE)[0]
-    return c
-
-
-def predict_sentiment(s):
-    return analyzer.polarity_scores(s)
-
-
+data = {}
 reddit = praw.Reddit(client_id='xkCClYxt6N8Qng',
                      client_secret='P-QDxnqJqJ620o5IsTjDmi9ePvQ',
                      user_agent='vladtheinpaler')
 
-subreddit = reddit.subreddit('askreddit')
 
-for submission in subreddit.top("year", limit=10):
-    print(submission.title)
-    print(submission.id)
-    print(submission.url)
-    post_ids.append(submission.id)
-    submission_urls.append(submission.url)
-    titles.append(submission.title)
-    post_times.append(submission.created_utc)
-    upvote_counts.append(submission.score)
-
-submission = reddit.submission(id=post_ids[0])
-submission.comment_sort = 'hot'
+def process_comment(c):
+    #print('c: ', c)
+    c = re.split("edit", c, flags=re.IGNORECASE)[0]
+    return c
 
 
-for c in list(submission.comments):
-    comments.append(process_comment(c))
+def analyze_submission(id):
+    submission = reddit.submission(id=id)
+    submission.comment_sort = 'hot'
+    sentiment = 0
+    num_comments = 0
+    for c in list(submission.comments):
+        try:
+            comment = process_comment(c.body)
+            print('comment: ', comment)
+            sentiment += predict_sentiment(comment)
+            num_comments += 1
+        except:
+            pass
+    data[id]['sentiment_value'] = sentiment / num_comments
+
+
+def predict_sentiment(s):
+    sentiment = analyzer.polarity_scores(s)
+    print('sentiment: ', sentiment)
+    return sentiment['compound']
+
+
+def process_subreddit(subreddit):
+    subreddit = reddit.subreddit('askreddit')
+    for sub in subreddit.top("year", limit=10):
+        # print(submission.title)
+        # print(submission.id)
+        # print(submission.url)
+        data[sub.id] = {
+            'url': sub.url,
+            'title': sub.title,
+            'post_time': sub.created_utc,
+            'upvote_count': sub.score
+        }
+
+
+def load_data():
+    for sub in subreddit_list:
+        process_subreddit(sub)

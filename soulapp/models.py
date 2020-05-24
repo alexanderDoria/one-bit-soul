@@ -9,7 +9,7 @@ class Submission(models.Model):
     title = models.CharField(max_length=300)
     url = models.CharField(max_length=100)
     upvotes = models.IntegerField()
-    sentiment = models.IntegerField()
+    sentiment = models.FloatField()
 
 
 # class Metrics(models.Model):
