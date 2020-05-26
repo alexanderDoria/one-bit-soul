@@ -12,7 +12,7 @@
     <form action="/search" method="get">
       <div class="input-group mb-3">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="basic-addon1">/r/</span>
+          <span class="input-group-text" id="basic-addon1">r/</span>
         </div>
         <input
           type="text"
@@ -21,7 +21,9 @@
           value="{{subreddit}}"
           name="subreddit"
         />
-        <button>search</button>
+        <button class="btn-dark" type="submit">
+          search
+        </button>
       </div>
     </form>
   </body>
